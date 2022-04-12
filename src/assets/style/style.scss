@@ -1,0 +1,136 @@
+/* Base */
+* {
+  box-sizing: border-box;
+}
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Color */
+$product-blue: #009fe8;
+.text-blue {
+  color: $product-blue !important;
+}
+.bg-blue {
+  background-color: $product-blue !important;
+}
+.border-blue {
+  border-color: $product-blue !important;
+}
+
+/* Width */
+.w-90 {
+  width: 90% !important;
+}
+.w-45 {
+  width: 45% !important;
+}
+.w-35 {
+  width: 35% !important;
+}
+.w-1-3 {
+  width: calc(100% / 3);
+}
+
+/* Ellipsis */
+.ellipsis-1, .ellipsis-2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.ellipsis-2 {
+  -webkit-line-clamp: 2;
+}
+
+/* Font-size */
+.fs-7 {
+  font-size: 0.75rem !important;
+}
+
+/* Letter-spacing */
+.ls-0 {
+  letter-spacing: 0 !important;
+}
+.ls-1 {
+  letter-spacing: 0.25rem !important;
+}
+
+/* Cursor */
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+/* Button */
+.btn {
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: normal;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background-color: $product-blue;
+  border: 1px solid $product-blue;
+  border-radius: 50rem;
+  cursor: pointer;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  border-color: #aaa;
+}
+.divider-dashed {
+  border-style: dashed;
+}
+
+/* -------------- */
+/* - Element ui - */
+/* -------------- */
+$input-height: 25px;
+
+.product-purchase-dialog {
+  .el-dialog__header {
+    padding: 0;
+  }
+  .el-dialog__body {
+    padding: 20px;
+  }
+  .no-padding-right.el-input--suffix .el-input__inner {
+    padding-right: 0;
+  }
+  .el-input__inner {
+    height: $input-height;
+    line-height: $input-height;
+    border: none;
+  }
+  .el-input__icon {
+    line-height: $input-height;
+  }
+}
+
+.profile-detail {
+  .el-input__inner {
+    height: $input-height;
+    padding: 0 !important;
+    line-height: $input-height;
+    font-weight: bold;
+    color: #2c3e50;
+    border: none;
+  }
+  .el-input__icon {
+    line-height: $input-height;
+  }
+  .el-input__prefix {
+    display: none;
+  }
+}
