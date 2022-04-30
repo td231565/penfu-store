@@ -7,6 +7,9 @@ ul, li {
   margin: 0;
   padding: 0;
 }
+button {
+  font-size: 1rem;
+}
 
 /* Color */
 $product-blue: #009fe8;
@@ -23,6 +26,9 @@ $product-blue: #009fe8;
 /* Width */
 .w-90 {
   width: 90% !important;
+}
+.w-70 {
+  width: 70% !important;
 }
 .w-45 {
   width: 45% !important;
@@ -132,5 +138,11 @@ $input-height: 25px;
   }
   .el-input__prefix {
     display: none;
+  }
+}
+
+.reimburse-search {
+  .el-input__inner {
+    border: 1px solid $product-blue;
   }
 }

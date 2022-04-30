@@ -1,27 +1,18 @@
 <template>
   <div class="home" style="">
-    <el-button class="btn" @click="$router.push({name: 'AttractionList'})">
-      <p>景點推薦</p>
-      <p>Sightseeing</p>
-    </el-button>
-    <el-button class="btn" @click="$router.push({name: 'ProductList'})">
-      <p>熱門商品</p>
-      <p>Product</p>
-    </el-button>
+    <Login />
   </div>
 </template>
 
 <script>
+import Login from './login'
+
 export default {
-  name: 'Home'
+  name: 'Home',
+  components: { Login }
 }
 </script>
 
 <style lang="scss" scoped>
-.home {
-  width: 100%;
-  height: 100vh;
-  background-image: url('../assets/image/home_bg.jpg');
-  background-size: cover;
-}
+
 </style>

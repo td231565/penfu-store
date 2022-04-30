@@ -23,6 +23,6 @@ git commit -m 'deploy'
 # 1. ssh
 # git push -f git@github.com:<USERNAME>/<REPO>.git master:gh-pages
 # 2. https
-git push -f https://github.com/td231565/penfu-user.git master:gh-pages
+git push -f https://github.com/td231565/penfu-store.git master:gh-pages
 
 cd -

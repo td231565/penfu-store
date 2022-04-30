@@ -7,47 +7,37 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/Home.vue')
+    component: () => import('../views/login/index.vue')
   },
   {
-    path: '/attraction/list',
-    name: 'AttractionList',
-    component: () => import(/* webpackChunkName: "AttractionList" */ '../views/attraction/List.vue')
+    path: '/landing',
+    name: 'Landing',
+    component: () => import(/* webpackChunkName: "Landing" */ '../views/landing/index.vue')
   },
   {
-    path: '/attraction/detail/:id',
-    name: 'AttractionDetail',
-    component: () => import(/* webpackChunkName: "AttractionDetail" */ '../views/attraction/Detail.vue')
+    path: '/info',
+    name: 'StoreInfo',
+    component: () => import(/* webpackChunkName: "StoreInfo" */ '../views/info/index.vue')
   },
   {
-    path: '/product/list',
-    name: 'ProductList',
-    component: () => import(/* webpackChunkName: "ProductList" */ '../views/product/List.vue')
+    path: '/password/forgot',
+    name: 'PasswordForgot',
+    component: () => import(/* webpackChunkName: "PasswordForgot" */ '../views/password/Forgot.vue')
   },
   {
-    path: '/product/detail/:type/:id',
-    name: 'ProductDetail',
-    component: () => import(/* webpackChunkName: "ProductDetail" */ '../views/product/Detail.vue')
+    path: '/password/setting',
+    name: 'PasswordSetting',
+    component: () => import(/* webpackChunkName: "PasswordSetting" */ '../views/password/Setting.vue')
   },
   {
-    path: '/success',
-    name: 'PaySuccess',
-    component: () => import(/* webpackChunkName: "PaySuccess" */ '../views/success/index.vue')
+    path: '/reimburse/list',
+    name: 'ReimburseList',
+    component: () => import(/* webpackChunkName: "ReimburseList" */ '../views/reimburse/List.vue')
   },
   {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import(/* webpackChunkName: "Profile" */ '../views/profile/index.vue')
-  },
-  {
-    path: '/profile/detail',
-    name: 'ProfileDetail',
-    component: () => import(/* webpackChunkName: "ProfileDetail" */ '../views/profile/Detail.vue')
-  },
-  {
-    path: '/profile/folder',
-    name: 'ProfileFolder',
-    component: () => import(/* webpackChunkName: "ProfileFolder" */ '../views/profile/Folder.vue')
+    path: '/reimburse/input',
+    name: 'ReimburseInput',
+    component: () => import(/* webpackChunkName: "ReimburseInput" */ '../views/reimburse/Input.vue')
   }
 ]
 
