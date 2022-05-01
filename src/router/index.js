@@ -38,6 +38,11 @@ const routes = [
     path: '/reimburse/input',
     name: 'ReimburseInput',
     component: () => import(/* webpackChunkName: "ReimburseInput" */ '../views/reimburse/Input.vue')
+  },
+  {
+    path: '/reimburse/check/:id',
+    name: 'ReimburseCheck',
+    component: () => import(/* webpackChunkName: "ReimburseCheck" */ '../views/reimburse/Check.vue')
   }
 ]
 

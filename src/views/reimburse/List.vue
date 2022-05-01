@@ -18,10 +18,10 @@
     <div v-if="isShowSearch" class="w-90 mx-auto mt-3 reimburse-search">
       <el-select v-model="queryData.category" placeholder="請選擇活動類別" class="border-blue w-100">
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value" />
+          v-for="item in categoryOptions"
+          :key="item"
+          :label="item"
+          :value="item" />
       </el-select>
       <div class="d-flex align-items-center my-2">
         <el-date-picker
@@ -36,7 +36,7 @@
           placeholder="結束時間"
           class="border-blue" />
       </div>
-      <el-input placeholder="請輸入查詢序號" v-model="queryData.sid" class="border-blue" />
+      <el-input placeholder="請輸入查詢序號" v-model="queryData.uuid" class="border-blue" />
       <div class="d-flex justify-content-center mt-3">
         <button class="btn rounded-3">查詢</button>
       </div>
@@ -53,10 +53,10 @@
           'bg-lightblue': idx % 2 === 1
         }">
         <div class="text-end">
-          <span class="rounded-pill bg-blue text-white px-2">{{ item.date }}</span>
+          <span class="rounded-pill bg-blue text-white px-2">{{ item.validTime.replace('T', ' ').slice(0, -3) }}</span>
         </div>
-        <p class="my-0">序號：{{ item.sid }}</p>
-        <p class="my-1">活動：{{ item.category }}</p>
+        <p class="my-0">序號：{{ item.uuid }}</p>
+        <p class="my-1">活動：{{ item.productCategory }}</p>
         <p class="my-1">金額：{{ item.price }} 元</p>
         <p class="my-0">票券：{{ item.title }}</p>
       </li>
@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'ReimburseList',
   data() {
@@ -86,6 +88,9 @@ export default {
   computed: {
     totalPrice() {
       return this.list.reduce((all, curr) => all + parseInt(curr.price), 0)
+    },
+    categoryOptions() {
+      return Array.from(new Set(this.list.map(({ productCategory }) => productCategory)))
     }
   },
   created() {
@@ -94,16 +99,15 @@ export default {
   methods: {
     getList() {
       this.isLoading = true
-      setTimeout(() => {
-        this.list = new Array(10).fill(0).map((_, idx) => ({
-          date: `2022-05-${10 + idx} 16:21`,
-          sid: new Date().valueOf() + idx,
-          category: '一般觀光票券',
-          price: '1399',
-          title: '饗宴船觀光票券'
-        }))
+      const url = 'https://pengfu-app.herokuapp.com/api/order/'
+      axios.get(url).then(res => {
+        this.list = res.data.order
         this.isLoading = false
-      }, 1500)
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('讀取失敗')
+        this.isLoading = false
+      })
     }
   }
 }

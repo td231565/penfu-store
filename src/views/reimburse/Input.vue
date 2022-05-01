@@ -1,35 +1,47 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="isLoading">
     <header class="bg-blue d-flex align-items-center p-2">
       <div class="w-1-3">
         <router-link to="/">
           <i class="el-icon-arrow-left text-white"></i>
         </router-link>
       </div>
-      <p class="w-1-3 my-0 text-center text-white">掃碼輸入</p>
+      <p class="w-1-3 my-0 text-center text-white">{{ isScan ? '掃碼輸入' : '核銷輸入'}}</p>
     </header>
-    <QrcodeStream @decode="onDecode">
-      <div class="position-relative w-100 h-100">
-        <div class="scan-block">
-          <div v-for="num in 4" :key="num" class="scan-block-corner"></div>
+    <template v-if="isScan">
+      <QrcodeStream @decode="onDecode" @init="handlerQrcodeInit">
+        <div class="position-relative w-100 h-100">
+          <div class="scan-block">
+            <div v-for="num in 4" :key="num" class="scan-block-corner"></div>
+          </div>
         </div>
+      </QrcodeStream>
+      <div class="mt-5 d-flex justify-content-center">
+        <button class="btn rounded bg-white text-blue" @click="isScan = false">輸入核銷號碼</button>
+        <label for="uploadQrcodePic" class="btn rounded bg-white ms-4 overflow-hidden">
+          <span class="text-blue">從圖片</span>
+          <!-- <button class="btn rounded text-decoration-none bg-white text-blue ms-4">從圖片</button> -->
+          <QrcodeCapture accept="image/*" id="uploadQrcodePic" @decode="onDecode"></QrcodeCapture>
+        </label>
       </div>
-    </QrcodeStream>
-    <div class="mt-5 d-flex justify-content-center">
-      <router-link to="/landing" class="text-decoration-none">
-        <button class="btn rounded bg-white text-blue">輸入核銷號碼</button>
-      </router-link>
-      <label for="uploadQrcodePic" class="btn rounded bg-white ms-4 overflow-hidden">
-        <span class="text-blue">從圖片</span>
-        <!-- <button class="btn rounded text-decoration-none bg-white text-blue ms-4">從圖片</button> -->
-        <QrcodeCapture accept="image/*" id="uploadQrcodePic" @decode="onDecode"></QrcodeCapture>
-      </label>
-    </div>
+    </template>
+    <template v-else>
+      <div class="w-70 mx-auto">
+        <p>請輸入核銷序號</p>
+        <el-input v-model="orderUuid" placeholder="請輸入 qrcode 下方序號"></el-input>
+      </div>
+      <div class="mt-5 w-50 mx-auto">
+        <div class="d-flex justify-content-between w-100">
+          <button class="btn rounded bg-white text-blue" @click="orderUuid = ''">重新填寫</button>
+          <button class="btn rounded ms-3" @click="submitInput">確認</button>
+        </div>
+        <button class="btn rounded bg-white text-blue w-100 mt-3" @click="isScan = true">掃描 QR-Code</button>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import { QrcodeStream, QrcodeCapture } from 'vue-qrcode-reader'
 
 export default {
@@ -37,22 +49,53 @@ export default {
   components: { QrcodeStream, QrcodeCapture },
   data() {
     return {
-      decodeUrl: ''
+      isScan: true,
+      orderUuid: '',
+      isLoading: true
+    }
+  },
+  watch: {
+    isScan(status) {
+      if (status) {
+        this.isLoading = true
+      }
     }
   },
   methods: {
     onDecode(str) {
-      this.decodeUrl = str
-      this.reimburseOrder(str)
+      this.orderUuid = str
+      this.gotoCheck(str)
     },
-    reimburseOrder(id) {
-      const url = `https://pengfu-app.herokuapp.com/api/order/${id}`
-      axios.patch(url, { status: 3 }).then(() => {
-        this.$message({ message: '核銷成功', type: 'success' })
-      }).catch(err => {
-        console.log(err)
-        this.$message.error('核銷失敗')
-      })
+    submitInput() {
+      if (!this.orderUuid) { return }
+      this.gotoCheck(this.orderUuid)
+    },
+    async handlerQrcodeInit(promise) {
+      try {
+        const { capabilities } = await promise
+      // successfully initialized
+      } catch (error) {
+        console.log(error)
+        if (error.name === 'NotAllowedError') {
+        // user denied camera access permisson
+        } else if (error.name === 'NotFoundError') {
+        // no suitable camera device installed
+        } else if (error.name === 'NotSupportedError') {
+        // page is not served over HTTPS (or localhost)
+        } else if (error.name === 'NotReadableError') {
+        // maybe camera is already in use
+        } else if (error.name === 'OverconstrainedError') {
+        // did you requested the front camera although there is none?
+        } else if (error.name === 'StreamApiNotSupportedError') {
+        // browser seems to be lacking features
+        }
+      } finally {
+        // hide loading indicator
+        this.isLoading = false
+      }
+    },
+    gotoCheck(uuid) {
+      this.$router.push(`/reimburse/check/${uuid}`)
     }
   }
 }
