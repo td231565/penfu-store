@@ -12,51 +12,52 @@
       </div>
     </header>
     <div class="w-90 mx-auto mt-3 rounded-3 border border-blue p-2 d-flex justify-content-between">
-      <span class="text-blue">核銷總金額：{{ totalPrice }}元</span>
-      <span class="text-blue">核銷張數：{{ list.length }}張</span>
+      <span class="text-blue">核銷總金額：{{ totalRevenue }}元</span>
+      <span class="text-blue">核銷張數：{{ totalCount }}張</span>
     </div>
     <div v-if="isShowSearch" class="w-90 mx-auto mt-3 reimburse-search">
       <el-select v-model="queryData.category" placeholder="請選擇活動類別" class="border-blue w-100">
         <el-option
           v-for="item in categoryOptions"
-          :key="item"
-          :label="item"
-          :value="item" />
+          :key="item.label"
+          :label="item.label"
+          :value="item.value" />
       </el-select>
       <div class="d-flex align-items-center my-2">
         <el-date-picker
           v-model="queryData.startDate"
           type="date"
           placeholder="開始時間"
-          class="border-blue" />
+          class="border-blue"
+          value-format="yyyy-MM-dd" />
         <span class="mx-2">至</span>
         <el-date-picker
           v-model="queryData.endDate"
           type="date"
           placeholder="結束時間"
-          class="border-blue" />
+          class="border-blue"
+          value-format="yyyy-MM-dd" />
       </div>
       <el-input placeholder="請輸入查詢序號" v-model="queryData.uuid" class="border-blue" />
       <div class="d-flex justify-content-center mt-3">
-        <button class="btn rounded-3">查詢</button>
+        <button class="btn rounded-3" @click="getList(1)">查詢</button>
       </div>
     </div>
-    <ul class="w-90 mx-auto mt-3">
+    <ul v-if="list.length > 0" class="w-90 mx-auto mt-3">
       <li
         v-for="(item, idx) in list"
-        :key="item.sid"
-        class="rounded-3 p-3 border"
+        :key="item.uuid"
+        class="rounded-3 p-3 border mb-3"
         :class="{
-          'mt-3': idx !== 0,
           'border-gray': idx % 2 === 0,
           'border-lightblue': idx % 2 === 1,
           'bg-lightblue': idx % 2 === 1
         }">
-        <div class="text-end">
-          <span class="rounded-pill bg-blue text-white px-2">{{ item.validTime.replace('T', ' ').slice(0, -3) }}</span>
+        <div v-if="item.category !== '伴手禮'" class="text-end">
+          <span class="rounded-pill bg-blue text-white px-2 py-1">{{ item.validTime.replace('T', ' ').slice(0, -3) }}</span>
         </div>
         <p class="my-0">序號：{{ item.uuid }}</p>
-        <p class="my-1">活動：{{ item.productCategory }}</p>
+        <p class="my-1">活動：{{ item.category }}</p>
         <p class="my-1">金額：{{ item.price }} 元</p>
         <p class="my-0">票券：{{ item.title }}</p>
       </li>
@@ -74,40 +75,59 @@ export default {
       isLoading: false,
       isShowSearch: false,
       list: [],
-      options: [
-        { label: '123', value: '123' }
+      categoryOptions: [
+        { label: '全部', value: '' },
+        { label: '票券', value: '票券' },
+        { label: '伴手禮', value: '伴手禮' }
       ],
       queryData: {
-        category: '',
+        page: 1,
+        numberPerPage: 20,
         startDate: '',
         endDate: '',
-        sid: ''
-      }
-    }
-  },
-  computed: {
-    totalPrice() {
-      return this.list.reduce((all, curr) => all + parseInt(curr.price), 0)
-    },
-    categoryOptions() {
-      return Array.from(new Set(this.list.map(({ productCategory }) => productCategory)))
+        uuid: '',
+        category: '',
+        businessID: 1
+      },
+      totalRevenue: 0,
+      totalCount: 0
     }
   },
   created() {
-    this.getList()
+    this.getList(1)
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handlerScrollButtom, false)
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handlerScrollButtom, false)
   },
   methods: {
-    getList() {
+    getList(page) {
       this.isLoading = true
-      const url = 'https://pengfu-app.herokuapp.com/api/order/'
-      axios.get(url).then(res => {
-        this.list = res.data.order
+      const url = 'https://pengfu-app.herokuapp.com/api/order/businessList/'
+      const query = { ...this.queryData, page }
+      axios.post(url, query).then(res => {
+        const { order, totalRevenue, totalCount } = res.data
+        this.list = page === 1 ? order : [...this.list, ...order]
+        this.totalRevenue = totalRevenue
+        this.totalCount = totalCount
+        this.queryData.page = page
         this.isLoading = false
       }).catch(err => {
         console.log(err)
         this.$message.error('讀取失敗')
         this.isLoading = false
       })
+    },
+    handlerScrollButtom() {
+      const { scrollTop, offsetHeight } = document.documentElement
+      const buttomOfWindow = scrollTop + window.innerHeight >= offsetHeight
+      const { page, numberPerPage } = this.queryData
+      if (buttomOfWindow && page * numberPerPage < this.totalCount) {
+        const nextPage = Number(page + 1)
+        this.getList(nextPage)
+      }
     }
   }
 }

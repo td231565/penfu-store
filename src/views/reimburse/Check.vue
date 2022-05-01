@@ -80,7 +80,7 @@ export default {
     reimburseOrder(uuid) {
       this.isLoading = true
       const url = `https://pengfu-app.herokuapp.com/api/order/${uuid}`
-      axios.patch(url, { status: 3 }).then(() => {
+      axios.patch(url, { status: 3, businessID: 1 }).then(() => {
         this.isReimburse = true
         this.isLoading = false
       }).catch(err => {
