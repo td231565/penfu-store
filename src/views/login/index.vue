@@ -1,9 +1,10 @@
 <template>
   <div v-loading.fullscreen.lock="isLoading">
     <h3 class="text-center">店家聯盟核銷</h3>
-    <div class="w-70 mx-auto">
-      <el-input placeholder="帳號" v-model="name"></el-input>
-      <el-input placeholder="密碼" v-model="password" class="mt-2"></el-input>
+    <img src="@/assets/image/store_league.jpg" alt="" class="d-block w-100">
+    <div class="w-70 mx-auto mt-4">
+      <el-input placeholder="帳號" v-model="loginInfo.username"></el-input>
+      <el-input placeholder="密碼" type="password" v-model="loginInfo.password" class="mt-2"></el-input>
       <div class="d-flex justify-content-between align-items-end mt-3">
         <el-checkbox v-model="isRememberPwd">記住密碼</el-checkbox>
         <router-link to="/password/forgot" class="text-decoration-none">
@@ -11,29 +12,54 @@
         </router-link>
       </div>
       <button class="btn rounded my-3 w-100" @click="login">登入</button>
-      <p class="text-end fs-7 text-secondary cursor-pointer">立即註冊</p>
+      <!-- <p class="text-end fs-7 text-secondary cursor-pointer">立即註冊</p> -->
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'Login',
   data() {
     return {
-      name: '',
-      password: '',
+      loginInfo: {
+        username: '',
+        password: ''
+      },
       isRememberPwd: false,
       isLoading: false
     }
   },
+  mounted() {
+    const storeLoginName = window.localStorage.getItem('storeLoginName')
+    if (storeLoginName) {
+      this.loginInfo.username = storeLoginName
+      this.loginInfo.password = window.localStorage.getItem('storeLoginPwd')
+    }
+  },
   methods: {
+    ...mapMutations(['setStoreId']),
     login() {
       this.isLoading = true
-      setTimeout(() => {
-        this.$router.push({ name: 'Landing' })
+      if (this.isRememberPwd) {
+        window.localStorage.setItem('storeLoginName', this.loginInfo.username)
+        window.localStorage.setItem('storeLoginPwd', this.loginInfo.password)
+      }
+      const url = 'https://pengfu-app.herokuapp.com/api/users/login'
+      axios.post(url, this.loginInfo).then(res => {
+        const { id, status } = res.data
+        this.setStoreId(id)
+        // 第一次登入導去改密碼
+        const nextRoute = status === '1' ? 'PasswordSetting' : 'Landing'
+        this.$router.push({ name: nextRoute })
         this.isLoading = false
-      }, 1500)
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('登入失敗')
+      })
     }
   }
 }
