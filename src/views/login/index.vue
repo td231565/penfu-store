@@ -38,6 +38,15 @@ export default {
     if (storeLoginName) {
       this.loginInfo.username = storeLoginName
       this.loginInfo.password = window.localStorage.getItem('storeLoginPwd')
+      this.isRememberPwd = true
+    }
+  },
+  watch: {
+    isRememberPwd(status) {
+      if (!status) {
+        window.localStorage.removeItem('storeLoginName')
+        window.localStorage.removeItem('storeLoginPwd')
+      }
     }
   },
   methods: {
@@ -53,7 +62,7 @@ export default {
         const { id, status } = res.data
         this.setStoreId(id)
         // 第一次登入導去改密碼
-        const nextRoute = status === '1' ? 'PasswordSetting' : 'Landing'
+        const nextRoute = Number(status) === 1 ? 'PasswordSetting' : 'Landing'
         this.$router.push({ name: nextRoute })
         this.isLoading = false
       }).catch(err => {

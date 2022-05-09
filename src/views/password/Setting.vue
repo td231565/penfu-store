@@ -43,7 +43,10 @@ export default {
   },
   methods: {
     changePassword() {
-      if (this.repeatPwd !== this.newPwd) { return }
+      if (this.repeatPwd !== this.newPwd) {
+        this.$message.error('再次輸入的新密碼不相同')
+        return
+      }
       const url = 'https://pengfu-app.herokuapp.com/api/users/change_password/'
       axios.patch(url, {
         id: this.storeId,
