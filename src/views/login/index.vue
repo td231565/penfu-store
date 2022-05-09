@@ -59,6 +59,7 @@ export default {
       }).catch(err => {
         console.log(err)
         this.$message.error('登入失敗')
+        this.isLoading = false
       })
     }
   }
