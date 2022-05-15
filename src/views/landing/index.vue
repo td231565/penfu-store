@@ -35,6 +35,17 @@
         </div>
       </div>
     </router-link>
+    <router-link to="/return/scan" class="text-decoration-none">
+      <div class="d-flex align-items-center px-3 py-2 inset-shadow" style="background-color: #4287f5;">
+        <div style="flex: 1;" class="pt-3">
+          <img src="@/assets/image/scan.png" alt="" class="d-block w-100">
+        </div>
+        <div style="flex: 2;" class="ps-1">
+          <h3 class="my-0 text-white">掃描歸還</h3>
+          <p class="my-0 fw-bold text-white">掃描消費者QRCode來做車輛歸還</p>
+        </div>
+      </div>
+    </router-link>
   </div>
 </template>
 

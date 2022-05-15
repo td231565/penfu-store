@@ -43,6 +43,16 @@ const routes = [
     path: '/reimburse/check/:id',
     name: 'ReimburseCheck',
     component: () => import(/* webpackChunkName: "ReimburseCheck" */ '../views/reimburse/Check.vue')
+  },
+  {
+    path: '/return/scan',
+    name: 'ReturnScan',
+    component: () => import(/* webpackChunkName: "ReturnScan" */ '../views/rent/Return.vue')
+  },
+  {
+    path: '/return/success/:orderId',
+    name: 'ReturnSuccess',
+    component: () => import(/* webpackChunkName: "ReturnSuccess" */ '../views/success/Return.vue')
   }
 ]
 
