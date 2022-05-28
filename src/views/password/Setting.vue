@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/api'
 import { mapState } from 'vuex'
 
 export default {
@@ -47,8 +47,7 @@ export default {
         this.$message.error('再次輸入的新密碼不相同')
         return
       }
-      const url = 'https://pengfu-app.herokuapp.com/api/users/change_password/'
-      axios.patch(url, {
+      axios.patch('users/change_password/', {
         id: this.storeId,
         password: this.oldPwd,
         newPassword: this.newPwd

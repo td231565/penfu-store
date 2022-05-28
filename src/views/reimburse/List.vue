@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/api'
 
 export default {
   name: 'ReimburseList',
@@ -105,9 +105,8 @@ export default {
   methods: {
     getList(page) {
       this.isLoading = true
-      const url = 'https://pengfu-app.herokuapp.com/api/order/businessList/'
       const query = { ...this.queryData, page }
-      axios.post(url, query).then(res => {
+      axios.post('order/businessList/', query).then(res => {
         const { order, totalRevenue, totalCount } = res.data
         this.list = page === 1 ? order : [...this.list, ...order]
         this.totalRevenue = totalRevenue

@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/api'
 
 export default {
   name: 'ReimburseCheck',
@@ -71,16 +71,15 @@ export default {
   methods: {
     getOrderData(orderUuid) {
       this.isLoading = true
-      const url = `https://pengfu-app.herokuapp.com/api/order/uuid/${orderUuid}`
-      axios.get(url).then(res => {
+      axios.get(`order/uuid/${orderUuid}`).then(res => {
         this.orderData = res.data.order
         this.isLoading = false
       })
     },
     reimburseOrder(uuid) {
       this.isLoading = true
-      const url = `https://pengfu-app.herokuapp.com/api/order/${uuid}`
-      axios.patch(url, { status: 3, businessID: 1 }).then(() => {
+      const data = { status: 3, businessID: 1 }
+      axios.patch(`order/${uuid}`, data).then(() => {
         this.isReimburse = true
         this.isLoading = false
       }).catch(err => {

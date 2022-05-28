@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/api'
 import { mapState } from 'vuex'
 
 export default {
@@ -109,8 +109,7 @@ export default {
   methods: {
     getStoreInfo(id) {
       this.isLoading = true
-      const url = `https://pengfu-app.herokuapp.com/api/business_info/${id}`
-      axios.get(url).then(res => {
+      axios.get(`business_info/${id}`).then(res => {
         this.infoData = res.data.Business
         this.isLoading = false
       }).catch(err => {
@@ -121,8 +120,7 @@ export default {
     },
     updateStoreInfo() {
       this.isLoading = true
-      const url = 'https://pengfu-app.herokuapp.com/api/business_info/'
-      axios.patch(url, this.infoData).then(() => {
+      axios.patch('business_info/', this.infoData).then(() => {
         this.$message({ type: 'success', message: '更新店家資料成功' })
         this.isLoading = false
       }).catch(err => {

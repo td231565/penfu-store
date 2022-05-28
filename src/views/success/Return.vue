@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/api'
 import dayjs from 'dayjs'
 
 export default {
@@ -64,8 +64,7 @@ export default {
   methods: {
     getOrderWriteoffcode(orderId) {
       this.isLoading = true
-      const url = `https://pengfu-app.herokuapp.com/api/car_order/${orderId}`
-      axios.get(url).then(res => {
+      axios.get(`car_order/${orderId}`).then(res => {
         const { writeOffCode, planID } = res.data.carOrder
         Promise.all([this.returnBike(orderId, writeOffCode), this.getPlanDetail(planID)]).then(() => {
           this.isLoading = false
@@ -81,7 +80,7 @@ export default {
       })
     },
     returnBike(orderId, code) {
-      const url = 'https://pengfu-app.herokuapp.com/api/car_order/return/write_off/'
+      const url = 'car_order/return/write_off/'
       const data = {
         orderID: orderId,
         writeOffCode: code
@@ -94,8 +93,7 @@ export default {
       })
     },
     getPlanDetail(planId) {
-      const url = `https://pengfu-app.herokuapp.com/api/plan/${planId}`
-      axios.get(url).then(res => {
+      axios.get(`plan/${planId}`).then(res => {
         this.planInfo = res.data.plan
       }).catch(err => {
         console.log(err)

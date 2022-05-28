@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/api'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -57,8 +57,7 @@ export default {
         window.localStorage.setItem('storeLoginName', this.loginInfo.username)
         window.localStorage.setItem('storeLoginPwd', this.loginInfo.password)
       }
-      const url = 'https://pengfu-app.herokuapp.com/api/users/login'
-      axios.post(url, this.loginInfo).then(res => {
+      axios.post('users/login', this.loginInfo).then(res => {
         const { id, status } = res.data
         this.setStoreId(id)
         // 第一次登入導去改密碼
