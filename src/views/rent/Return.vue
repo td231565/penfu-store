@@ -28,11 +28,11 @@
     <template v-else>
       <div class="w-70 mx-auto">
         <p>請輸入歸還序號</p>
-        <el-input v-model="orderUuid" placeholder="請輸入 qrcode 下方序號"></el-input>
+        <el-input v-model="orderId" placeholder="請輸入 qrcode 下方序號"></el-input>
       </div>
       <div class="mt-5 w-50 mx-auto">
         <div class="d-flex justify-content-between w-100">
-          <button class="btn rounded bg-white text-blue" @click="orderUuid = ''">重新填寫</button>
+          <button class="btn rounded bg-white text-blue" @click="orderId = ''">重新填寫</button>
           <button class="btn rounded ms-3" @click="submitInput">確認</button>
         </div>
         <button class="btn rounded bg-white text-blue w-100 mt-3" @click="isScan = true">掃描 QR-Code</button>
@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       isScan: true,
-      orderUuid: '',
+      orderId: '',
       isLoading: true
     }
   },
@@ -63,12 +63,12 @@ export default {
   },
   methods: {
     onDecode(str) {
-      this.orderUuid = str
+      this.orderId = str
       this.gotoCheck(str)
     },
     submitInput() {
-      if (!this.orderUuid) { return }
-      this.gotoCheck(this.orderUuid)
+      if (!this.orderId) { return }
+      this.gotoCheck(this.orderId)
     },
     async handlerQrcodeInit(promise) {
       try {
@@ -94,8 +94,8 @@ export default {
         this.isLoading = false
       }
     },
-    gotoCheck(uuid) {
-      this.$router.push(`/return/success/${uuid}`)
+    gotoCheck(orderId) {
+      this.$router.push(`/return/success/${orderId}`)
     }
   }
 }

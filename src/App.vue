@@ -8,6 +8,24 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'App',
+  created() {
+    const isLogged = this.checkLogin()
+    if (!isLogged) {
+      this.$message.error('請登入')
+      this.$router.push({ name: 'Home' })
+    }
+  },
+  methods: {
+    checkLogin() {
+      return !!window.localStorage.getItem('token')
+    }
+  }
+}
+</script>
+
 <style lang="scss">
 * {
   box-sizing: border-box;

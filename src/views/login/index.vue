@@ -58,7 +58,8 @@ export default {
         window.localStorage.setItem('storeLoginPwd', this.loginInfo.password)
       }
       axios.post('users/login', this.loginInfo).then(res => {
-        const { id, status } = res.data
+        const { id, status, access_token } = res.data
+        window.localStorage.setItem('token', access_token)
         this.setStoreId(id)
         // 第一次登入導去改密碼
         const nextRoute = Number(status) === 1 ? 'PasswordSetting' : 'Landing'

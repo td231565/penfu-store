@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import axios from '@/api'
 import { QrcodeStream, QrcodeCapture } from 'vue-qrcode-reader'
 
 export default {
@@ -51,7 +52,8 @@ export default {
     return {
       isScan: true,
       orderUuid: '',
-      isLoading: true
+      isLoading: true,
+      orderData: {}
     }
   },
   watch: {
@@ -61,14 +63,44 @@ export default {
       }
     }
   },
+  created() {
+    setTimeout(() => {
+      this.onDecode('c16d10acdc674ed98e7708a392675032')
+    }, 1500)
+  },
   methods: {
     onDecode(str) {
       this.orderUuid = str
-      this.gotoCheck(str)
+      this.getOrderData(str)
+    },
+    getOrderData(orderUuid) {
+      this.isLoading = true
+      axios.get(`order/uuid/${orderUuid}`).then(res => {
+        const status = Number(res.data.order.status)
+        switch (status) {
+          case 1:
+          case 2:
+            this.orderData = res.data.order
+            this.gotoCheck(this.orderUuid)
+            break
+          case 3:
+            this.$message.error('訂單已核銷')
+            break
+          case 4:
+            this.$message.error('訂單已取消')
+            break
+          case 5:
+            this.$message.error('資料錯誤')
+            break
+          default:
+            break
+        }
+        this.isLoading = false
+      })
     },
     submitInput() {
       if (!this.orderUuid) { return }
-      this.gotoCheck(this.orderUuid)
+      this.getOrderData(this.orderUuid)
     },
     async handlerQrcodeInit(promise) {
       try {
