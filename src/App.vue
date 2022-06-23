@@ -12,11 +12,11 @@
 export default {
   name: 'App',
   created() {
-    const isLogged = this.checkLogin()
-    if (!isLogged) {
-      this.$message.error('請登入')
-      this.$router.push({ name: 'Home' })
-    }
+    // const isLogged = this.checkLogin()
+    // if (!isLogged) {
+    //   this.$message.error('請登入')
+    //   this.$router.push({ name: 'Home' })
+    // }
   },
   methods: {
     checkLogin() {
