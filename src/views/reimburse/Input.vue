@@ -63,11 +63,6 @@ export default {
       }
     }
   },
-  created() {
-    setTimeout(() => {
-      this.onDecode('c16d10acdc674ed98e7708a392675032')
-    }, 1500)
-  },
   methods: {
     onDecode(str) {
       this.orderUuid = str
